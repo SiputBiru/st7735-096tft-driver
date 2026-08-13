@@ -1,0 +1,30 @@
+{
+  "name": "st7735-096tft-driver",
+  "version": "1.0.0",
+  "description": "ST7735S 0.96-inch (80x160) TFT display driver for STM32F103 (nologo board). Register bit-bang, zero dependencies, drawing + text + fonts. Ported from nologo factory firmware.",
+  "keywords": [
+    "st7735",
+    "st7735s",
+    "tft",
+    "lcd",
+    "display",
+    "stm32",
+    "stm32f103",
+    "stm32f1",
+    "0.96",
+    "80x160",
+    "nologo",
+    "driver"
+  ],
+  "authors": [
+    {
+      "name": "siput",
+      "url": "https://github.com/SiputBiru"
+    }
+  ],
+  "license": "MIT",
+  "frameworks": ["arduino"],
+  "platforms": ["ststm32"],
+  "headers": ["lcd.h"],
+  "examples": ["examples/*/platformio.ini"]
+}
