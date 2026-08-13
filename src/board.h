@@ -17,15 +17,14 @@
 #define LCD_BOARD_H
 
 #if defined(ARDUINO)
-  #include <Arduino.h>
-  #define LCD_DELAY_MS(ms) delay(ms)
-#elif defined(STM32F1) || defined(STM32F103xB) || defined(STM32F10X_MD) || \
-      defined(STM32F10X_HD)
-  #include "stm32f1xx.h"
-  extern void tft_delay_ms(uint32_t ms); /* user provided */
-  #define LCD_DELAY_MS(ms) tft_delay_ms(ms)
+#include <Arduino.h>
+#define LCD_DELAY_MS(ms) delay(ms)
+#elif defined(STM32F1) || defined(STM32F103xB) || defined(STM32F10X_MD) || defined(STM32F10X_HD)
+#include "stm32f1xx.h"
+extern void tft_delay_ms(uint32_t ms); /* user provided */
+#define LCD_DELAY_MS(ms) tft_delay_ms(ms)
 #else
-  #error "board.h: define ARDUINO, or add your STM32 context here"
+#error "board.h: define ARDUINO, or add your STM32 context here"
 #endif
 
 #endif /* LCD_BOARD_H */

@@ -19,8 +19,8 @@
 #ifndef LCD_INIT_H
 #define LCD_INIT_H
 
-#include <stdint.h>
 #include "board.h"
+#include <stdint.h>
 
 /* 0/1 = portrait 80x160, 2/3 = landscape 160x80 (factory default = 2) */
 #define USE_HORIZONTAL 2
@@ -38,14 +38,14 @@
 #define LCD_SCLK_Set() (GPIOB->BSRR = (1u << 10))
 #define LCD_MOSI_Clr() (GPIOB->BRR = (1u << 11))
 #define LCD_MOSI_Set() (GPIOB->BSRR = (1u << 11))
-#define LCD_RES_Clr()  (GPIOA->BRR = (1u << 7))
-#define LCD_RES_Set()  (GPIOA->BSRR = (1u << 7))
-#define LCD_DC_Clr()   (GPIOB->BRR = (1u << 0))
-#define LCD_DC_Set()   (GPIOB->BSRR = (1u << 0))
-#define LCD_CS_Clr()   (GPIOB->BRR = (1u << 1))
-#define LCD_CS_Set()   (GPIOB->BSRR = (1u << 1))
-#define LCD_BLK_Clr()  (GPIOA->BRR = (1u << 6))
-#define LCD_BLK_Set()  (GPIOA->BSRR = (1u << 6))
+#define LCD_RES_Clr() (GPIOA->BRR = (1u << 7))
+#define LCD_RES_Set() (GPIOA->BSRR = (1u << 7))
+#define LCD_DC_Clr() (GPIOB->BRR = (1u << 0))
+#define LCD_DC_Set() (GPIOB->BSRR = (1u << 0))
+#define LCD_CS_Clr() (GPIOB->BRR = (1u << 1))
+#define LCD_CS_Set() (GPIOB->BSRR = (1u << 1))
+#define LCD_BLK_Clr() (GPIOA->BRR = (1u << 6))
+#define LCD_BLK_Set() (GPIOA->BSRR = (1u << 6))
 
 #ifdef __cplusplus
 extern "C" {

@@ -9,8 +9,7 @@
 #include "lcd.h"
 
 /* Fill an area with a solid color */
-void LCD_Fill(uint16_t xsta, uint16_t ysta, uint16_t xend, uint16_t yend,
-              uint16_t color) {
+void LCD_Fill(uint16_t xsta, uint16_t ysta, uint16_t xend, uint16_t yend, uint16_t color) {
   uint16_t i, j;
   LCD_Address_Set(xsta, ysta, xend - 1, yend - 1);
   for (i = ysta; i < yend; i++)
@@ -24,8 +23,7 @@ void LCD_DrawPoint(uint16_t x, uint16_t y, uint16_t color) {
 }
 
 /* Bresenham line */
-void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
-                  uint16_t color) {
+void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color) {
   uint16_t t;
   int xerr = 0, yerr = 0, delta_x, delta_y, distance;
   int incx, incy, uRow, uCol;
@@ -68,8 +66,7 @@ void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
   }
 }
 
-void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
-                       uint16_t color) {
+void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color) {
   LCD_DrawLine(x1, y1, x2, y1, color);
   LCD_DrawLine(x1, y1, x1, y2, color);
   LCD_DrawLine(x1, y2, x2, y2, color);
@@ -97,8 +94,15 @@ void Draw_Circle(uint16_t x0, uint16_t y0, uint8_t r, uint16_t color) {
 
 /* text */
 
-void LCD_ShowChinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc,
-                     uint16_t bc, uint8_t sizey, uint8_t mode) {
+void LCD_ShowChinese(
+  uint16_t x,
+  uint16_t y,
+  uint8_t* s,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey,
+  uint8_t mode
+) {
   while (*s != 0) {
     LCD_ShowChinese16x16(x, y, s, fc, bc, sizey, mode);
     s += 2;
@@ -106,8 +110,15 @@ void LCD_ShowChinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc,
   }
 }
 
-void LCD_ShowChinese16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc,
-                          uint16_t bc, uint8_t sizey, uint8_t mode) {
+void LCD_ShowChinese16x16(
+  uint16_t x,
+  uint16_t y,
+  uint8_t* s,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey,
+  uint8_t mode
+) {
   uint8_t i, j, m = 0;
   uint16_t k;
   uint16_t HZnum;
@@ -147,8 +158,15 @@ void LCD_ShowChinese16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc,
   }
 }
 
-void LCD_ShowChar(uint16_t x, uint16_t y, uint8_t num, uint16_t fc,
-                  uint16_t bc, uint8_t sizey, uint8_t mode) {
+void LCD_ShowChar(
+  uint16_t x,
+  uint16_t y,
+  uint8_t num,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey,
+  uint8_t mode
+) {
   uint8_t temp, sizex, t, m = 0;
   uint16_t i, TypefaceNum;
   uint16_t x0 = x;
@@ -192,8 +210,15 @@ void LCD_ShowChar(uint16_t x, uint16_t y, uint8_t num, uint16_t fc,
   }
 }
 
-void LCD_ShowString(uint16_t x, uint16_t y, const char *p, uint16_t fc,
-                    uint16_t bc, uint8_t sizey, uint8_t mode) {
+void LCD_ShowString(
+  uint16_t x,
+  uint16_t y,
+  const char* p,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey,
+  uint8_t mode
+) {
   while (*p != '\0') {
     LCD_ShowChar(x, y, (uint8_t)(*p), fc, bc, sizey, mode);
     x += sizey / 2;
@@ -208,8 +233,15 @@ static uint32_t mypow(uint8_t m, uint8_t n) {
   return result;
 }
 
-void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len,
-                    uint16_t fc, uint16_t bc, uint8_t sizey) {
+void LCD_ShowIntNum(
+  uint16_t x,
+  uint16_t y,
+  uint16_t num,
+  uint8_t len,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey
+) {
   uint8_t t, temp;
   uint8_t enshow = 0;
   uint8_t sizex = sizey / 2;
@@ -226,8 +258,15 @@ void LCD_ShowIntNum(uint16_t x, uint16_t y, uint16_t num, uint8_t len,
   }
 }
 
-void LCD_ShowFloatNum1(uint16_t x, uint16_t y, float num, uint8_t len,
-                       uint16_t fc, uint16_t bc, uint8_t sizey) {
+void LCD_ShowFloatNum1(
+  uint16_t x,
+  uint16_t y,
+  float num,
+  uint8_t len,
+  uint16_t fc,
+  uint16_t bc,
+  uint8_t sizey
+) {
   uint8_t t, temp, sizex;
   uint16_t num1;
   sizex = sizey / 2;
@@ -244,8 +283,7 @@ void LCD_ShowFloatNum1(uint16_t x, uint16_t y, float num, uint8_t len,
 }
 
 /* Picture: RGB565 byte pairs (hi, lo) */
-void LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t length, uint16_t width,
-                     const uint8_t pic[]) {
+void LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t length, uint16_t width, const uint8_t pic[]) {
   uint16_t i, j;
   uint32_t k = 0;
   LCD_Address_Set(x, y, x + length - 1, y + width - 1);
