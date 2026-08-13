@@ -28,6 +28,8 @@ instruction per bit. That is what this library does, and it works.
 
 To change pins, edit the `LCD_*` macros at the top of `src/lcd_init.h`.
 
+more info in [nologo docs](https://www.nologo.tech/en/product/stm32/STM32F103C8T6-C6T60.96TFT/stm32f103rct61.html).
+
 ## Usage (PlatformIO / Arduino)
 
 Add to `platformio.ini`:
@@ -52,10 +54,11 @@ void loop(void) {
 }
 ```
 
-## Usage (bare-metal C)
+## Bare-metal usage
 
 Include `board.h` for a bare-metal STM32 context (provide `tft_delay_ms()`), or
-edit `board.h` to add your own platform. Everything else is plain C.
+edit `board.h` to add your own platform. The driver has no framework
+dependencies.
 
 ## Orientation
 
@@ -77,15 +80,6 @@ edit `board.h` to add your own platform. Everything else is plain C.
 - `LCD_ShowPicture(x, y, w, h, rgb565_hi_lo_bytes)` - images
 
 Colors are RGB565; named colors live in `src/lcd.h`.
-
-## Lessons learned (why this driver exists)
-
-1. **Ask for the factory firmware early.** The code a board ships with is the
-   ground truth: pinout, init, orientation, everything.
-2. **The tooling layer can be the liar.** The board was never broken; the
-   library's GPIO setup on that core was. Sometimes the register-level path is
-   the *only* path that works.
-3. ST-Link v2 clones sometimes fail on the first upload attempt. Just retry.
 
 ## Credits / Provenance
 
