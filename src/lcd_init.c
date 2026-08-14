@@ -9,6 +9,21 @@
 
 /* GPIO: PA6, PA7, PB0, PB1, PB10, PB11 as push-pull output @ 50MHz */
 void LCD_GPIO_Init(void) {
+#if defined(USE_HAL_DRIVER)
+  /* STM32Cube HAL path (framework = stm32cube) */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+  GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7; /* PA6 BLK, PA7 RES */
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_10 | GPIO_PIN_11; /* PB0 DC, PB1 CS, PB10 SCK, PB11 MOSI */
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+#else
   /* Enable GPIOA (bit2) + GPIOB (bit3) clocks on APB2 */
   RCC->APB2ENR |= (1u << 2) | (1u << 3);
 
@@ -29,6 +44,7 @@ void LCD_GPIO_Init(void) {
   GPIOB->CRH |= (0x3u << 8); /* PB10 */
   GPIOB->CRH &= ~(0xFu << 12);
   GPIOB->CRH |= (0x3u << 12); /* PB11 */
+#endif
 
   /* idle states */
   LCD_SCLK_Set();

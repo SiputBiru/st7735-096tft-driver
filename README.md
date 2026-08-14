@@ -58,7 +58,56 @@ void loop(void) {
 
 Include `board.h` for a bare-metal STM32 context (provide `tft_delay_ms()`), or
 edit `board.h` to add your own platform. The driver has no framework
-dependencies.
+dependencies: `board.h` only needs the STM32 register definitions
+(`stm32f1xx.h`) and a millisecond delay.
+
+```c
+#include "lcd.h"     // pulls in board.h -> stm32f1xx.h
+
+void tft_delay_ms(uint32_t ms);   // you provide this (e.g. SysTick-based)
+
+int main(void) {
+  /* set up your clock + SysTick, then: */
+  LCD_Init();
+  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  while (1) { }
+}
+```
+
+## STM32Cube HAL usage
+
+The driver also works under ST's STM32Cube HAL. `board.h` detects
+`USE_HAL_DRIVER` (defined automatically by PlatformIO's `stm32cube`
+framework) and uses `HAL_Delay()`; `LCD_GPIO_Init()` configures the panel
+pins through `HAL_GPIO_Init()` instead of raw registers. Call `HAL_Init()`
+(so SysTick runs) before `LCD_Init()`:
+
+```c
+#include "stm32f1xx_hal.h"
+#include "lcd.h"
+
+int main(void) {
+  HAL_Init();
+  /* SystemClock_Config() ... */
+  LCD_Init();
+  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  while (1) { }
+}
+```
+
+## Examples
+
+Three examples for the nologo STM32F103C8T6 0.96" TFT board, all flashing
+with an ST-Link v2 (`pio run -t upload`):
+
+| Directory | Framework | Entry point | Delay |
+| --- | --- | --- | --- |
+| `examples/arduino-hal` | Arduino (`framework = arduino`) | `setup()` / `loop()` | `delay()` |
+| `examples/bare-metal` | CMSIS, no framework (`framework = cmsis`) | `main()` | SysTick → `tft_delay_ms()` |
+| `examples/stm32cube-hal` | STM32Cube HAL (`framework = stm32cube`) | `main()` | `HAL_Delay()` |
+
+The two C examples run at 64 MHz from the internal HSI oscillator (PLL x16),
+so no external crystal is required.
 
 ## Orientation
 

@@ -23,7 +23,7 @@
     }
   ],
   "license": "MIT",
-  "frameworks": ["arduino"],
+  "frameworks": ["arduino", "cmsis", "stm32cube"],
   "platforms": ["ststm32"],
   "headers": ["lcd.h"],
   "examples": ["examples/*/platformio.ini"]
