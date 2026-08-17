@@ -143,6 +143,41 @@ macros are compile-time constants for the default orientation; prefer
 `LCD_GetWidth()/LCD_GetHeight()` in code that runs after
 `LCD_SetOrientation()`.
 
+## Font sizes & limitations
+
+The glyphs are pre-rendered bitmaps baked into `src/lcdfont.h`; the driver
+cannot scale them. Only the sizes below exist, and the width is always
+`sizey / 2`:
+
+| `sizey` | `sizex` | ASCII table | Chinese table |
+| --- | --- | --- | --- |
+| 12 | 6 | `ascii_1206[][12]` | - |
+| 16 | 8 | `ascii_1608[][16]` | `tfont16[]` (16x16) |
+| 24 | 12 | `ascii_2412[][48]` | - |
+| 32 | 16 | `ascii_3216[][64]` | - |
+
+### ASCII (`LCD_ShowChar` / `LCD_ShowString`)
+
+Passing any other `sizey` hits `else return;` in `LCD_ShowChar` and draws
+nothing. The screen keeps whatever background you filled (typically a black
+screen). There is no error message and no fallback.
+
+### Chinese (`LCD_ShowChinese` / `LCD_ShowChinese16x16`)
+
+The Chinese font is fixed at 16x16 (`tfont16[]`, 32 bytes per glyph) and has
+no size guard at all. `sizey` is used to compute the byte count, so:
+
+- `sizey < 16` reads too few bytes and misaligns rows, producing garbage glyphs
+- `sizey > 16` reads past the 32-byte glyph (`Msk[32]`), an out-of-bounds
+  read; for the last character in the table it reads past the end of
+  `tfont16[]` entirely, which can hard-fault the MCU
+
+### Adding new sizes
+
+The driver only knows the four tables above. To use other sizes, either scale
+the existing bitmaps (draw each font pixel as an NxN block) or generate new
+font tables and extend the `if/else` chain in `LCD_ShowChar`.
+
 ## Credits / Provenance
 
 - The **init sequence** (register values) and the **overall driver structure**
