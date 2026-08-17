@@ -84,28 +84,51 @@ void LCD_WR_REG(uint8_t dat) {
   LCD_DC_Set();
 }
 
+/* runtime orientation, defaults to the compile-time USE_HORIZONTAL */
+static uint8_t s_lcd_orient = USE_HORIZONTAL;
+
+/* 0 = 0x08, 1 = 0xC8, 2 = 0x78, 3 = 0xA8 (same values as LCD_Init's MADCTL) */
+void LCD_SetOrientation(uint8_t orient) {
+  static const uint8_t madctl[4] = {0x08, 0xC8, 0x78, 0xA8};
+
+  if (orient > 3)
+    orient = 0;
+  s_lcd_orient = orient;
+
+  LCD_WR_REG(0x36); /* MADCTL */
+  LCD_WR_DATA8(madctl[orient]);
+}
+
+uint16_t LCD_GetWidth(void) {
+  return (s_lcd_orient < 2) ? 80 : 160; /* portrait | landscape */
+}
+
+uint16_t LCD_GetHeight(void) {
+  return (s_lcd_orient < 2) ? 160 : 80;
+}
+
 /* Window + RAM write. Offsets depend on orientation (factory lcd_init.c):
- *   USE_HORIZONTAL 0/1 (portrait):  x+26, y+1
- *   USE_HORIZONTAL 2/3 (landscape): x+1,  y+26
+ *   orientation 0/1 (portrait):  x+26, y+1
+ *   orientation 2/3 (landscape): x+1,  y+26
  */
 void LCD_Address_Set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-#if (USE_HORIZONTAL == 0) || (USE_HORIZONTAL == 1)
-  LCD_WR_REG(0x2a);
-  LCD_WR_DATA(x1 + 26);
-  LCD_WR_DATA(x2 + 26);
-  LCD_WR_REG(0x2b);
-  LCD_WR_DATA(y1 + 1);
-  LCD_WR_DATA(y2 + 1);
-  LCD_WR_REG(0x2c);
-#else
-  LCD_WR_REG(0x2a);
-  LCD_WR_DATA(x1 + 1);
-  LCD_WR_DATA(x2 + 1);
-  LCD_WR_REG(0x2b);
-  LCD_WR_DATA(y1 + 26);
-  LCD_WR_DATA(y2 + 26);
-  LCD_WR_REG(0x2c);
-#endif
+  if (s_lcd_orient < 2) {
+    LCD_WR_REG(0x2a);
+    LCD_WR_DATA(x1 + 26);
+    LCD_WR_DATA(x2 + 26);
+    LCD_WR_REG(0x2b);
+    LCD_WR_DATA(y1 + 1);
+    LCD_WR_DATA(y2 + 1);
+    LCD_WR_REG(0x2c);
+  } else {
+    LCD_WR_REG(0x2a);
+    LCD_WR_DATA(x1 + 1);
+    LCD_WR_DATA(x2 + 1);
+    LCD_WR_REG(0x2b);
+    LCD_WR_DATA(y1 + 26);
+    LCD_WR_DATA(y2 + 26);
+    LCD_WR_REG(0x2c);
+  }
 }
 
 /* factory LCD_Init (register values identical to nologo lcd_init.c) */

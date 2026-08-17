@@ -97,7 +97,7 @@ int main(void) {
 
 ## Examples
 
-Three examples for the nologo STM32F103C8T6 0.96" TFT board, all flashing
+Four examples for the nologo STM32F103C8T6 0.96" TFT board, all flashing
 with an ST-Link v2 (`pio run -t upload`):
 
 | Directory | Framework | Entry point | Delay |
@@ -105,9 +105,13 @@ with an ST-Link v2 (`pio run -t upload`):
 | `examples/arduino-hal` | Arduino (`framework = arduino`) | `setup()` / `loop()` | `delay()` |
 | `examples/bare-metal` | CMSIS, no framework (`framework = cmsis`) | `main()` | SysTick → `tft_delay_ms()` |
 | `examples/stm32cube-hal` | STM32Cube HAL (`framework = stm32cube`) | `main()` | `HAL_Delay()` |
+| `examples/bare-metal-text-rotate` | CMSIS, no framework | `main()` | SysTick → `tft_delay_ms()` |
 
-The two C examples run at 64 MHz from the internal HSI oscillator (PLL x16),
+The three C examples run at 64 MHz from the internal HSI oscillator (PLL x16),
 so no external crystal is required.
+
+`bare-metal-text-rotate` shows "st7735 driver" centered while cycling the
+panel through all 4 native rotations at runtime (`LCD_SetOrientation`).
 
 ## Orientation
 
@@ -121,6 +125,8 @@ so no external crystal is required.
 ## API
 
 - `LCD_Init()` - power on + init the panel
+- `LCD_SetOrientation(0..3)` - rotate the panel at runtime (MADCTL)
+- `LCD_GetWidth() / LCD_GetHeight()` - current orientation size
 - `LCD_Fill(x0, y0, x1, y1, color)` - solid fill
 - `LCD_DrawPoint / LCD_DrawLine / LCD_DrawRectangle / Draw_Circle`
 - `LCD_ShowChar / LCD_ShowString` - ASCII text (sizes 12/16/24/32)

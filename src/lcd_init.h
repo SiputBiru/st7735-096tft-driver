@@ -58,6 +58,9 @@ void LCD_WR_DATA(uint16_t dat);
 void LCD_WR_REG(uint8_t dat);
 void LCD_Address_Set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 void LCD_Init(void);
+void LCD_SetOrientation(uint8_t orient); /* runtime MADCTL rotation, 0..3 */
+uint16_t LCD_GetWidth(void);             /* current orientation width */
+uint16_t LCD_GetHeight(void);            /* current orientation height */
 
 #ifdef __cplusplus
 }
