@@ -16,21 +16,24 @@ void setup() {
 }
 
 void loop() {
+  uint16_t w = LCD_GetWidth();
+  uint16_t h = LCD_GetHeight();
+
   /* solid color test */
-  LCD_Fill(0, 0, LCD_W, LCD_H, RED);
+  LCD_Fill(0, 0, w, h, RED);
   delay(700);
-  LCD_Fill(0, 0, LCD_W, LCD_H, GREEN);
+  LCD_Fill(0, 0, w, h, GREEN);
   delay(700);
-  LCD_Fill(0, 0, LCD_W, LCD_H, BLUE);
+  LCD_Fill(0, 0, w, h, BLUE);
   delay(700);
-  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  LCD_Fill(0, 0, w, h, WHITE);
   delay(700);
 
   /* shapes on black */
-  LCD_Fill(0, 0, LCD_W, LCD_H, BLACK);
-  LCD_DrawRectangle(4, 4, LCD_W - 5, LCD_H - 5, WHITE);
-  LCD_DrawLine(0, 0, LCD_W - 1, LCD_H - 1, MAGENTA);
-  LCD_DrawLine(LCD_W - 1, 0, 0, LCD_H - 1, MAGENTA);
+  LCD_Fill(0, 0, w, h, BLACK);
+  LCD_DrawRectangle(4, 4, w - 5, h - 5, WHITE);
+  LCD_DrawLine(0, 0, w, h, MAGENTA);
+  LCD_DrawLine(w, 0, 0, h, MAGENTA);
   Draw_Circle(80, 40, 30, CYAN);
 
   /* text (8x16 font) */

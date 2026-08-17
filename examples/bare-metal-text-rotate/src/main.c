@@ -62,7 +62,7 @@ static void ShowCentered(uint16_t fc, uint16_t bc) {
 
 int main(void) {
   static const uint16_t color[4] = { RED, GREEN, BLUE, GRAY };
-  uint8_t o;
+  lcd_orientation_t o;
 
   SystemClock_Config();
   SysTick_Config(SystemCoreClock / 1000); /* 1ms tick */
@@ -70,7 +70,7 @@ int main(void) {
   LCD_Init();
 
   while (1) {
-    for (o = 0; o < 4; o++) {
+    for (o = LCD_PORTRAIT; o <= LCD_LANDSCAPE_FLIP; o++) {
       uint16_t w, h;
 
       LCD_SetOrientation(o); /* rotate 90 degrees */

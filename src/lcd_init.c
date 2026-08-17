@@ -85,18 +85,23 @@ void LCD_WR_REG(uint8_t dat) {
 }
 
 /* runtime orientation, defaults to the compile-time USE_HORIZONTAL */
-static uint8_t s_lcd_orient = USE_HORIZONTAL;
+static lcd_orientation_t s_lcd_orient = (lcd_orientation_t)USE_HORIZONTAL;
 
-/* 0 = 0x08, 1 = 0xC8, 2 = 0x78, 3 = 0xA8 (same values as LCD_Init's MADCTL) */
-void LCD_SetOrientation(uint8_t orient) {
+/* LCD_PORTRAIT=0x08, LCD_PORTRAIT_FLIP=0xC8, LCD_LANDSCAPE=0x78, LCD_LANDSCAPE_FLIP=0xA8
+ * (same values as LCD_Init's MADCTL) */
+void LCD_SetOrientation(lcd_orientation_t orient) {
   static const uint8_t madctl[4] = {0x08, 0xC8, 0x78, 0xA8};
 
-  if (orient > 3)
-    orient = 0;
+  if (orient > LCD_LANDSCAPE_FLIP)
+    orient = LCD_PORTRAIT;
   s_lcd_orient = orient;
 
   LCD_WR_REG(0x36); /* MADCTL */
   LCD_WR_DATA8(madctl[orient]);
+}
+
+lcd_orientation_t LCD_GetOrientation(void) {
+  return s_lcd_orient;
 }
 
 uint16_t LCD_GetWidth(void) {

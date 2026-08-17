@@ -46,7 +46,7 @@ Or just copy `src/` into your project. Then:
 
 void setup(void) {
   LCD_Init();                 // init display + backlight
-  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  LCD_Fill(0, 0, LCD_GetWidth(), LCD_GetHeight(), WHITE);
   LCD_ShowString(10, 10, "Hello!", RED, WHITE, 16, 0);
 }
 
@@ -69,7 +69,7 @@ void tft_delay_ms(uint32_t ms);   // you provide this (e.g. SysTick-based)
 int main(void) {
   /* set up your clock + SysTick, then: */
   LCD_Init();
-  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  LCD_Fill(0, 0, LCD_GetWidth(), LCD_GetHeight(), WHITE);
   while (1) { }
 }
 ```
@@ -90,7 +90,7 @@ int main(void) {
   HAL_Init();
   /* SystemClock_Config() ... */
   LCD_Init();
-  LCD_Fill(0, 0, LCD_W, LCD_H, WHITE);
+  LCD_Fill(0, 0, LCD_GetWidth(), LCD_GetHeight(), WHITE);
   while (1) { }
 }
 ```
@@ -115,17 +115,21 @@ panel through all 4 native rotations at runtime (`LCD_SetOrientation`).
 
 ## Orientation
 
-`USE_HORIZONTAL` in `src/lcd_init.h`:
+`USE_HORIZONTAL` in `src/lcd_init.h` selects the compile-time default; the
+runtime API uses the `lcd_orientation_t` enum:
 
-| Value | Orientation | Size | MADCTL | Window offsets |
-| --- | --- | --- | --- | --- |
-| 0, 1 | portrait | 80x160 | 0x08 / 0xC8 | x+26, y+1 |
-| 2, 3 | landscape (default) | 160x80 | 0x78 / 0xA8 | x+1, y+26 |
+| Enum | Value | Orientation | Size | MADCTL | Window offsets |
+| --- | --- | --- | --- | --- | --- |
+| `LCD_PORTRAIT` | 0 | portrait | 80x160 | 0x08 | x+26, y+1 |
+| `LCD_PORTRAIT_FLIP` | 1 | portrait (flipped) | 80x160 | 0xC8 | x+26, y+1 |
+| `LCD_LANDSCAPE` | 2 | landscape (default) | 160x80 | 0x78 | x+1, y+26 |
+| `LCD_LANDSCAPE_FLIP` | 3 | landscape (flipped) | 160x80 | 0xA8 | x+1, y+26 |
 
 ## API
 
 - `LCD_Init()` - power on + init the panel
-- `LCD_SetOrientation(0..3)` - rotate the panel at runtime (MADCTL)
+- `LCD_SetOrientation(lcd_orientation_t)` - rotate the panel at runtime (MADCTL)
+- `LCD_GetOrientation()` - current orientation (`lcd_orientation_t`)
 - `LCD_GetWidth() / LCD_GetHeight()` - current orientation size
 - `LCD_Fill(x0, y0, x1, y1, color)` - solid fill
 - `LCD_DrawPoint / LCD_DrawLine / LCD_DrawRectangle / Draw_Circle`
@@ -134,7 +138,10 @@ panel through all 4 native rotations at runtime (`LCD_SetOrientation`).
 - `LCD_ShowIntNum / LCD_ShowFloatNum1` - numbers
 - `LCD_ShowPicture(x, y, w, h, rgb565_hi_lo_bytes)` - images
 
-Colors are RGB565; named colors live in `src/lcd.h`.
+Colors are RGB565; named colors live in `src/lcd.h`. The `LCD_W`/`LCD_H`
+macros are compile-time constants for the default orientation; prefer
+`LCD_GetWidth()/LCD_GetHeight()` in code that runs after
+`LCD_SetOrientation()`.
 
 ## Credits / Provenance
 

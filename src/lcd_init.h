@@ -33,6 +33,14 @@
 #define LCD_H 80
 #endif
 
+/* runtime orientation (values match the LCD_SetOrientation MADCTL table) */
+typedef enum {
+  LCD_PORTRAIT = 0,       /* 80x160,  MADCTL 0x08 */
+  LCD_PORTRAIT_FLIP = 1,  /* 80x160,  MADCTL 0xC8 */
+  LCD_LANDSCAPE = 2,      /* 160x80,  MADCTL 0x78 (factory default) */
+  LCD_LANDSCAPE_FLIP = 3  /* 160x80,  MADCTL 0xA8 */
+} lcd_orientation_t;
+
 /* Pin macros: direct BSRR/BRR register access (50MHz push-pull) */
 #define LCD_SCLK_Clr() (GPIOB->BRR = (1u << 10))
 #define LCD_SCLK_Set() (GPIOB->BSRR = (1u << 10))
@@ -58,9 +66,10 @@ void LCD_WR_DATA(uint16_t dat);
 void LCD_WR_REG(uint8_t dat);
 void LCD_Address_Set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 void LCD_Init(void);
-void LCD_SetOrientation(uint8_t orient); /* runtime MADCTL rotation, 0..3 */
-uint16_t LCD_GetWidth(void);             /* current orientation width */
-uint16_t LCD_GetHeight(void);            /* current orientation height */
+void LCD_SetOrientation(lcd_orientation_t orient); /* runtime MADCTL rotation */
+lcd_orientation_t LCD_GetOrientation(void);        /* current orientation */
+uint16_t LCD_GetWidth(void);                       /* current orientation width */
+uint16_t LCD_GetHeight(void);                      /* current orientation height */
 
 #ifdef __cplusplus
 }
