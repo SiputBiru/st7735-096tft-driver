@@ -172,6 +172,28 @@ no size guard at all. `sizey` is used to compute the byte count, so:
   read; for the last character in the table it reads past the end of
   `tfont16[]` entirely, which can hard-fault the MCU
 
+`tfont16[]` itself uses GB2312 code. only has 10 Chinese characters defined: 
+
+| Index    | GB2312 Code  | Character |
+| -------- | ------------ | --------- |
+| 0        | 0xD1, 0xC7   | 升        |
+| 1        | 0xB2, 0xA9   | 华        |
+| 2        | 0xD6, 0xC7   | 科        |
+| 3        | 0xC4, 0xDC   | 能        |
+| 4        | 0xD4, 0xC6   | 运        |
+| 5        | 0xD4, 0xEC   | 动        |
+| 6        | 0xBF, 0xC6   | 科        |
+| 7        | 0xBC, 0xBC   | 技        |
+| 8        | 0xCE, 0xDE   | 无        |
+| 9        | 0xC3, 0xFB   | 限        |
+
+example: 
+
+```C
+  uint8_t char_ke[] = { 0xBF, 0xC6 }; // this will give 科
+  LCD_ShowChinese16x16(10, 10, char_ke, WHITE, BLACK, 16, 0);
+```
+
 ### Adding new sizes
 
 The driver only knows the four tables above. To use other sizes, either scale
